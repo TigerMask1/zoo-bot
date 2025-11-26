@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZooBot - Discord Character Collection Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(10, 10, 26, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #00D9FF;
+            letter-spacing: 1px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #00D9FF;
+            transition: width 0.3s ease;
+            border-radius: 1px;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 80px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 217, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -100px;
+            left: -100px;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(147, 51, 234, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            bottom: -150px;
+            right: -150px;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #00D9FF 0%, #FFD700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            margin-bottom: 40px;
+            color: #b0b0c3;
+            font-weight: 300;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            font-size: 1em;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00D9FF 0%, #00BFDF 100%);
+            color: #0a0a1a;
+            box-shadow: 0 8px 25px rgba(0, 217, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 217, 255, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #00D9FF;
+            border: 2px solid #00D9FF;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 217, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 100px 20px;
+            background: rgba(10, 10, 26, 0.5);
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 60px;
+            color: #00D9FF;
+            font-weight: 700;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 217, 255, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+            animation: fadeIn 0.6s ease-out backwards;
+        }
+
+        .feature-item:nth-child(1) { animation-delay: 0.1s; }
+        .feature-item:nth-child(2) { animation-delay: 0.2s; }
+        .feature-item:nth-child(3) { animation-delay: 0.3s; }
+        .feature-item:nth-child(4) { animation-delay: 0.4s; }
+
+        .feature-item:hover {
+            background: rgba(0, 217, 255, 0.08);
+            border-color: #00D9FF;
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 217, 255, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .feature-item h3 {
+            font-size: 1.4em;
+            margin-bottom: 10px;
+            color: #FFD700;
+        }
+
+        .feature-item p {
+            color: #b0b0c3;
+            font-size: 0.95em;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 80px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+        }
+
+        .cta-section h2 {
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            color: #00D9FF;
+        }
+
+        .cta-section p {
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            color: #b0b0c3;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(10, 10, 26, 0.95);
+            padding: 40px 20px;
+            text-align: center;
+            border-top: 1px solid rgba(0, 217, 255, 0.1);
+        }
+
+        footer p {
+            color: #888899;
+            font-size: 0.95em;
+        }
+
+        footer a {
+            color: #00D9FF;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #FFD700;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(20px); }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5em;
+            }
+
+            .hero p {
+                font-size: 1.1em;
+            }
+
+            nav ul {
+                gap: 15px;
+            }
+
+            nav a {
+                font-size: 0.85em;
+            }
+
+            .section-title {
+                font-size: 2em;
+            }
+
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <div class="logo">🦁 ZooBot</div>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="guide.html">Guide</a></li>
+                <li><a href="#cta">Support</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>🦁 ZooBot</h1>
+            <p>Collect • Battle • Trade • Dominate</p>
+            <div class="btn-group">
+                <a href="https://discord.com/api/oauth2/authorize?client_id=YOUR_BOT_ID&permissions=YOUR_PERMISSIONS&scope=bot%20applications.commands" class="btn btn-primary">
+                    ➕ Add to Server
+                </a>
+                <a href="guide.html" class="btn btn-secondary">
+                    📖 Full Guide
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section" id="features">
+        <div class="features-container">
+            <h2 class="section-title">🎮 Core Features</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <span class="feature-icon">🎯</span>
+                    <h3>Catch & Collect</h3>
+                    <p>Hunt 51+ unique characters that drop every 30 seconds. Complete your collection and become the ultimate collector!</p>
+                </div>
+
+                <div class="feature-item">
+                    <span class="feature-icon">⚔️</span>
+                    <h3>Epic Battles</h3>
+                    <p>Challenge other players in turn-based combat with strategic moves, abilities, and real-time action!</p>
+                </div>
+
+                <div class="feature-item">
+                    <span class="feature-icon">🔄</span>
+                    <h3>Trade System</h3>
+                    <p>Exchange characters, coins, and gems with other players to perfect your roster and strategy.</p>
+                </div>
+
+                <div class="feature-item">
+                    <span class="feature-icon">🏆</span>
+                    <h3>Clan Wars</h3>
+                    <p>Join powerful clans and compete weekly to earn exclusive UST rewards and climb global rankings!</p>
+                </div>
+
+                <div class="feature-item">
+                    <span class="feature-icon">🎨</span>
+                    <h3>Cosmetics Shop</h3>
+                    <p>Customize with exclusive character skins and profile pictures earned through competitive play.</p>
+                </div>
+
+                <div class="feature-item">
+                    <span class="feature-icon">📊</span>
+                    <h3>Progression</h3>
+                    <p>Complete quests, level up characters, claim daily rewards, and dominate leaderboards!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section" id="cta">
+        <h2>Ready to Join the Zoo?</h2>
+        <p>Start your adventure now and become a legendary collector</p>
+        <a href="https://discord.com/api/oauth2/authorize?client_id=YOUR_BOT_ID&permissions=YOUR_PERMISSIONS&scope=bot%20applications.commands" class="btn btn-primary" style="margin-top: 20px;">
+            ➕ Add ZooBot Now
+        </a>
+        <p style="margin-top: 30px; font-size: 0.9em;">
+            <a href="guide.html" style="color: #00D9FF; text-decoration: underline;">View complete guide, commands, and details →</a>
+        </p>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 ZooBot - Discord Character Collection Game</p>
+        <p style="margin-top: 8px;">Made with 💜 for gamers worldwide</p>
+    </footer>
+</body>
+</html>
